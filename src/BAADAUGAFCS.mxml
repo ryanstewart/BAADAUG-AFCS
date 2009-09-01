@@ -56,7 +56,7 @@
 
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
-				// Removing a user with userManager class
+				// Removing a user with userManager class 
 				cSession.userManager.removeUser(list.selectedItem.userID);
 			}
 
