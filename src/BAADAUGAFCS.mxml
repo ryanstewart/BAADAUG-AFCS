@@ -64,11 +64,11 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Authentication and session information -->
-		<rtc:AdobeHSAuthenticator id="hostAuth" userName="ryanstewart82@gmail.com" password="demotest"
+		<rtc:AdobeHSAuthenticator id="hostAuth" userName="-your AFCS username-" password="-your AFCS password-"
 								  authenticationFailure="hostAuth_authenticationFailureHandler(event)"
 								  authenticationSuccess="hostAuth_authenticationSuccessHandler(event)"/>
 		<rtc:AdobeHSAuthenticator id="guestAuth" userName="BAADAUG User" />
-		<rtc:ConnectSession id="cSession" roomURL="http://connectnow.acrobat.com/ryancocomotest/baadaugafcs" authenticator="{hostAuth}" />
+		<rtc:ConnectSession id="cSession" roomURL="-your AFCS room URL-" authenticator="{hostAuth}" />
 		<rtc:RoomSettings id="settings" roomState="active" autoPromote="false" />
 	</fx:Declarations>
 	<!-- The userManager class populating our list to show the roster -->
