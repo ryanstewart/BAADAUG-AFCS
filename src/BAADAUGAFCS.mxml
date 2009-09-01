@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/halo" minWidth="1024" minHeight="768" xmlns:rtc="AfcsNameSpace"
+			   creationComplete="application1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.ColorPickerEvent;
+			import com.adobe.rtc.events.SharedPropertyEvent;
+			import com.adobe.rtc.sharedModel.SharedProperty;
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+			import com.adobe.rtc.events.AuthenticationEvent;
+			
+			[Bindable]
+			public var sharedProperty:SharedProperty;
+
+			// Our authentication failure
+			protected function hostAuth_authenticationFailureHandler(event:AuthenticationEvent):void
+			{
+				Alert.show("BAD!!!");
+			}
+
+			// successful authentication
+			protected function hostAuth_authenticationSuccessHandler(event:AuthenticationEvent):void
+			{
+				trace('sweet!');
+			}
+
+
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// Setting up the sharedProperty to create a collaborative ColorPicker
+				sharedProperty = new SharedProperty();
+				sharedProperty.addEventListener(SharedPropertyEvent.CHANGE,onSharedPropertyChange);
+				sharedProperty.subscribe();
+				
+				// Required to begin our session
+				cSession.login();
+				
+			}
+			
+			protected function onSharedPropertyChange(event:SharedPropertyEvent):void
+			{
+				// When our SharedProperty changes, we need to set the color to the new value
+				color.selectedColor = event.value;
+			}
+
+
+			protected function color_changeHandler(event:ColorPickerEvent):void
+			{
+				// When our color is changed, we send that new value to the SharedProperty
+				sharedProperty.value = event.color;
+			}
+
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// Removing a user with userManager class
+				cSession.userManager.removeUser(list.selectedItem.userID);
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Authentication and session information -->
+		<rtc:AdobeHSAuthenticator id="hostAuth" userName="ryanstewart82@gmail.com" password="demotest"
+								  authenticationFailure="hostAuth_authenticationFailureHandler(event)"
+								  authenticationSuccess="hostAuth_authenticationSuccessHandler(event)"/>
+		<rtc:AdobeHSAuthenticator id="guestAuth" userName="BAADAUG User" />
+		<rtc:ConnectSession id="cSession" roomURL="http://connectnow.acrobat.com/ryancocomotest/baadaugafcs" authenticator="{hostAuth}" />
+		<rtc:RoomSettings id="settings" roomState="active" autoPromote="false" />
+	</fx:Declarations>
+	<!-- The userManager class populating our list to show the roster -->
+	<s:List id="list" dataProvider="{cSession.userManager.userCollection}" labelField="displayName" />
+	<s:Button y="200" label="Remove" click="button1_clickHandler(event)" />
+	<!-- Our collaborative ColorPicker -->
+	<mx:ColorPicker id="color" change="color_changeHandler(event)" />
+	<!-- The "Pod" components -->
+	<rtc:WebCamera x="139" y="34"/>
+	<rtc:Roster x="558" y="34" displaySelection="false" showMenuButtons="true"/>
+	<rtc:SharedWhiteBoard x="384" y="275" sessionDependent="false"/>
+	<rtc:FileShare x="132" y="416" useSSL="true" clearUponSessionEnd="false"/>
+	
+</s:Application>
