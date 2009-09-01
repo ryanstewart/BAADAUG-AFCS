@@ -12,6 +12,7 @@
 			import mx.controls.Alert;
 			import com.adobe.rtc.events.AuthenticationEvent;
 			
+			// The object we share across AFCS instances
 			[Bindable]
 			public var sharedProperty:SharedProperty;
 
